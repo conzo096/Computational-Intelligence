@@ -43,11 +43,14 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			 * You must set the best Individual at the end of a run
 			 * 
 			 */
-
+			
 			// Select 2 Individuals from the current population. Currently returns random Individual
-			Individual parent1 = selectFirstParent(); 
-			Individual parent2 = selectSecondParent();
+			Individual parent1 = FitnessProportionalSelection(); 
+			Individual parent2 = FitnessProportionalSelection();
 
+			while(parent1 == parent2)
+				parent2 = FitnessProportionalSelection();
+			
 			// Generate a child by crossover. Not Implemented			
 			ArrayList<Individual> children = reproduce(parent1, parent2);			
 			
@@ -59,14 +62,16 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 			// Replace children in population
 			replace(children);
-
+			
+		//	mutate(population);
 			// check to see if the best has improved
 			best = getBest();
 			
 			// Implemented in NN class. 
 			outputStats();
 			
-			//Increment number of completed generations			
+			//Increment number of completed generations	
+			//evaluations++;
 		}
 
 		//save the trained network to disk
@@ -111,14 +116,46 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		return parent.copy();
 	}
 	
-	/**
-	 * Selection -- Finds a average member of the population.
-	 * 
-	 */	private Individual selectSecondParent()
+	private Individual selectSecondParent()
 	{
 		Individual parent = getAverage();
 		return parent.copy();		
 	}
+	
+	private Individual FitnessProportionalSelection()
+	{
+		Individual parent = population.get(rouletteSelect());
+		return parent.copy();
+		
+	}
+	 
+	int rouletteSelect()
+	{
+		// calculate the total weight
+		double weight_sum = 0;
+		for(int i=0; i<population.size(); i++)
+		{
+			weight_sum += population.get(i).fitness;
+		}
+		// get a random value
+		double value = randUniformPositive() * weight_sum;	
+		// locate the random value based on the weights
+		for(int i=0; i<population.size(); i++)
+		{		
+			value -= population.get(i).fitness;		
+			if(value <= 0)
+				return i;
+		}
+		// when rounding errors occur, we return the last item's index 
+		return population.size() - 1;
+	}
+
+	// Returns a uniformly distributed double value between 0.0 and 1.0
+	double randUniformPositive()
+	{
+		// easiest implementation
+		return Parameters.random.nextDouble();
+	} 
 	
 	
 	
@@ -135,25 +172,31 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		// Could have a percent chance of multiple children
 		ArrayList<Individual> children = new ArrayList<>();
 		
-		// Create a child.
-		Individual child = parent1.copy();
-		Individual child2 = parent2.copy();
-		for (int i = 0; i < child.chromosome.length; i++)
-		{	
-			// parent2 is every other one.
-			if(i%2 == 0)
-			{
-				child.chromosome[i] = parent2.chromosome[i];
-				child2.chromosome[i] = parent1.chromosome[i];
+		children.add(parent1.copy());
+		children.add(parent1.copy());
+		
+		
+		for(int i=0; i < children.size();i++)
+		{
+			Individual child = children.get(i);
+			// Uniform crossover operation.
+			for (int j = 0; j < child.chromosome.length; j++)
+			{	
+				if(Parameters.random.nextBoolean())
+				{
+						child.chromosome[j] = parent2.chromosome[j];
+				}
 			}
+			
+			// One point crossover
+//			int midPoint = (int)child.chromosome.length/2;
+//			for(int j = 0; j < midPoint;j++)
+//			{
+//					child.chromosome[j] = parent2.chromosome[j];
+//			}
+			
 		}
 		
-		//children.add(parent1.copy());
-		//children.add(parent2.copy());	
-		
-		
-		children.add(child.copy());
-		children.add(child2.copy());
 		return children;
 	} 
 	
@@ -173,12 +216,11 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 				{
 					if (Parameters.random.nextBoolean())
 					{
-						individual.chromosome[i] += (Parameters.mutateChange);
+						
+						individual.chromosome[i] += Parameters.mutateChange;
 					}
 					else
-					{
-						individual.chromosome[i] -= (Parameters.mutateChange);
-					}
+						individual.chromosome[i] -= Parameters.mutateChange;
 				}
 			}
 		}		
@@ -202,6 +244,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		}		
 	}
 
+	
 	/**
 	 * Returns a copy of the best individual in the population
 	 * 
@@ -274,7 +317,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			// If the fitness is within 
 			if( (averageFitness - individual.fitness) <= 0.2f)
 			{
-				System.out.println(averageFitness - individual.fitness);
+				//System.out.println(averageFitness - individual.fitness);
 				return individual.copy();
 			}
 		}
@@ -302,7 +345,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		return idx;
 	}	
 
-	private int getBestIndex() {
+ 	private int getBestIndex() {
 		Individual best = null;
 		int idx = -1;
 		for (int i = 0; i < population.size(); i++) {
