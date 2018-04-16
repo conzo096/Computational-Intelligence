@@ -44,12 +44,15 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			 * 
 			 */
 			
+			ArrayList<Individual> parents = TournamentSelection();
 			// Select 2 Individuals from the current population. Currently returns random Individual
-			Individual parent1 = FitnessProportionalSelection(); 
-			Individual parent2 = FitnessProportionalSelection();
+			Individual parent1 = parents.get(0).copy();//FitnessProportionalSelection(); 
+			Individual parent2 = parents.get(1).copy();//FitnessProportionalSelection();
 
-			while(parent1 == parent2)
-				parent2 = FitnessProportionalSelection();
+			if(parent1 == parent2)
+				System.out.println("STOP");
+			//while(parent1 == parent2)
+			//	parent2 = FitnessProportionalSelection();
 			
 			// Generate a child by crossover. Not Implemented			
 			ArrayList<Individual> children = reproduce(parent1, parent2);			
@@ -63,7 +66,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			// Replace children in population
 			replace(children);
 			
-		//	mutate(population);
+			//mutate(population);
 			// check to see if the best has improved
 			best = getBest();
 			
@@ -128,6 +131,34 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		return parent.copy();
 		
 	}
+	
+	private ArrayList<Individual> TournamentSelection()
+	{
+		Individual best = null;
+		Individual runnerUp = null;
+		for(int i=0; i<Parameters.tournamentSize;i++)
+		{
+			int prob= Parameters.random.nextInt(Parameters.popSize); // generate a number between 0 and last index of arraylist
+	    
+			// Check if it is best.
+	  
+			if(best==null)
+				best= population.get(prob);
+		    else if(best.fitness > population.get(prob).fitness)
+		    	best= population.get(prob).copy();
+			 if(best != null)
+			  {
+				  if(runnerUp == null || runnerUp.fitness > population.get(prob).fitness)
+		           	runnerUp= population.get(prob).copy();
+			  }      
+		  }
+		  ArrayList<Individual> parents = new ArrayList<Individual>();
+		  parents.add(best.copy());
+		  parents.add(runnerUp.copy());
+		  return parents;
+	}
+
+	
 	 
 	int rouletteSelect()
 	{

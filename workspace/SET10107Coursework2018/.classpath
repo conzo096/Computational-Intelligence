@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="lib/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="lib/LunarCW2018.jar"/>
+	<classpathentry kind="lib" path="C:/Users/40167111/Documents/GitHub/Computational-Intelligence/workspace/SET10107Coursework2018/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/40167111/Documents/GitHub/Computational-Intelligence/workspace/SET10107Coursework2018/lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/40167111/Documents/GitHub/Computational-Intelligence/workspace/SET10107Coursework2018/lib/LunarCW2018.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

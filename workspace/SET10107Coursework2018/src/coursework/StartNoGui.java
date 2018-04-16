@@ -1,5 +1,7 @@
 package coursework;
 
+import java.io.File;
+
 import model.Fitness;
 import model.LunarParameters.DataSet;
 import model.NeuralNetwork;
@@ -67,6 +69,28 @@ public class StartNoGui {
 		 *  
 		 *  Uncomment the following code and replace the name of the saved file to test a previously trained network 
 		 */
+//		
+//		File folder = new File("C:\\Users\\40167111\\Documents\\GitHub\\Computational-Intelligence\\workspace\\SET10107Coursework2018");
+//		File[] listOfFiles = folder.listFiles();
+//
+//		    for (int i = 0; i < listOfFiles.length; i++)
+//		    {
+//		      if (listOfFiles[i].isFile())
+//		      {
+//		    	  String filePath = new String(listOfFiles[i].getName());
+//		   
+//		    	  if(filePath.contains("-5.txt"))
+//		    	  {
+//			        NeuralNetwork nn2 = NeuralNetwork.loadNeuralNetwork(filePath);
+//					Parameters.setDataSet(DataSet.Test);
+//					double fitness2 = Fitness.evaluate(nn2);
+//					System.out.println("Fitness on " + Parameters.getDataSet() + " " + fitness2);
+//		    	  }
+//		      
+//		      }
+//		    }
+//		
+//		
 		
 //		NeuralNetwork nn2 = NeuralNetwork.loadNeuralNetwork("1234567890123-5.txt");
 //		Parameters.setDataSet(DataSet.Random);
